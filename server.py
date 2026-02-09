@@ -18,9 +18,10 @@ def get_formatted_response(data) :
         f"For the given statement, the system response is {score_text}. "
         f"The dominant emotion is {dominant}."
     )
+    return result
 
 @app.route("/emotionDetector")
-def sent_analyzer():
+def emotion_analyzer():
     ''' 
     This function receives the text from the HTML interface and 
     runs emotion detection over the text.
