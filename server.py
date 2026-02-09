@@ -31,8 +31,8 @@ def emotion_analyzer():
     text_to_analyze = request.args.get("textToAnalyze")
     response = emotion_detector(text_to_analyze)
 
-    if response is None:
-        return "Invalid Input!!!!"
+    if response is None or response["dominant_emotion"] is None:
+        return "Invalid text! Please try again!."
 
     return get_formatted_response(response)
 
