@@ -1,19 +1,30 @@
+"""
+Flask application which is used to detect emotions in the text provided
+"""
+
 from flask import Flask, render_template, request
 
 from EmotionDetection.emotion_detection import emotion_detector
 
 app = Flask("Emotion Detector")
 
-def get_formatted_response(data) :
+def _get_formatted_response(data) :
+    """
+    Function to format the response in user friendly format
+    param: data - Response to be formatted
+    """
     dominant = data.get("dominant_emotion")
 
-    emotion_wo_dominant = {emotion: score for emotion, score in data.items() if emotion != "dominant_emotion"}
+    emotion_wo_dominant = {
+        emotion: score for emotion, score in data.items()
+        if emotion != "dominant_emotion"}
     emotions_list = list(emotion_wo_dominant.items())
     emotions = [f"'{emotion}': {score}" for emotion, score in emotions_list[:-1]]
-    emotions.append(f"'{emotions_list[-1][0]}': {emotions_list[-1][1]}")
+    emotions.append(
+        f"'{emotions_list[-1][0]}': {emotions_list[-1][1]}")
 
-    score_text = ", ".join(emotions[:-1]) + " and " + emotions[-1] if len(emotions) > 1 else emotions[0]
-    
+    score_text = ", ".join(emotions[:-1])
+    score_text = score_text + " and " + emotions[-1] if len(emotions) > 1 else emotions[0]
     result = (
         f"For the given statement, the system response is {score_text}. "
         f"The dominant emotion is {dominant}."
@@ -34,7 +45,7 @@ def emotion_analyzer():
     if response is None or response["dominant_emotion"] is None:
         return "Invalid text! Please try again!."
 
-    return get_formatted_response(response)
+    return _get_formatted_response(response)
 
 @app.route("/")
 def render_index_page():
@@ -42,6 +53,7 @@ def render_index_page():
     Renders the main application page
     '''
     return render_template('index.html')
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
